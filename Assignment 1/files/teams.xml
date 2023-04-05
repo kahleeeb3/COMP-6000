@@ -1,0 +1,18 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<teams>
+	<team tid="t1" cars="car1">
+		<team_title>Team 1</team_title>
+		<description>Description 1</description>
+		<series>series 1</series>
+	</team>
+	<team tid="t2" cars="car1">
+		<team_title>Team 2</team_title>
+		<description>Description 2</description>
+		<series>Series 2</series>
+	</team>
+	<team tid="t3" cars="car3">
+		<team_title>Team 3</team_title>
+		<description>Description 3</description>
+		<series>series 3</series>
+	</team>
+</teams>
