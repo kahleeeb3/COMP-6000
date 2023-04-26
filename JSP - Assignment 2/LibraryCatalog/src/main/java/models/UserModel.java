@@ -4,7 +4,7 @@ public class UserModel {
 
     String username, fname;
 
-    public UserModel(String username, String name) {
+    public UserModel(String username, String fname) {
         this.username = username;
         this.fname = fname;
     }

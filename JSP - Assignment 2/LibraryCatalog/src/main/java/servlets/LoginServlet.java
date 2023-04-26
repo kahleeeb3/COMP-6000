@@ -58,11 +58,11 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", userModel);
 
             // launch the Fetch Music Servlet
-            RequestDispatcher indexPageDispatcher = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("error", "Login Successful.");
-            indexPageDispatcher.forward(request,response);
-            //RequestDispatcher requestDispatcher = request.getRequestDispatcher("/FetchMusicServlet");
-            //requestDispatcher.forward(request, response);
+            //RequestDispatcher indexPageDispatcher = request.getRequestDispatcher("index.jsp");
+            //request.setAttribute("error", "Login Successful.");
+            //indexPageDispatcher.forward(request,response);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/FetchMusicServlet");
+            requestDispatcher.forward(request, response);
         }
         // if log in failed
         else {
