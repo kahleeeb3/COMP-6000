@@ -36,8 +36,8 @@ public class LoginServlet extends HttpServlet {
     }
     protected void submitLoginForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // get the username and password elements
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = request.getParameter("login_username");
+        String password = request.getParameter("login_password");
 
         // create an SQL Instance
         MySQLdb db = MySQLdb.getInstance();
@@ -74,8 +74,10 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void submitRegisterForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-        request.setAttribute("register_error", "Clicked Register.");
-        requestDispatcher.forward(request, response);
+        String first_name = request.getParameter("register_first_name");
+        String last_name = request.getParameter("register_last_name");
+        String username = request.getParameter("register_username");
+        String password = request.getParameter("register_password");
+
     }
 }
