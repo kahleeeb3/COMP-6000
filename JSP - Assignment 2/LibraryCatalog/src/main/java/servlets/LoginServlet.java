@@ -79,5 +79,34 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("register_username");
         String password = request.getParameter("register_password");
 
+        // register the user
+        int registerSuccess = 0;
+        MySQLdb db = MySQLdb.getInstance();
+        try {
+            // try to log in with the provided username and password
+            registerSuccess = db.doRegister(0,first_name,last_name,username,password);
+        }
+        catch(SQLException e) {
+            // print any errors
+            e.printStackTrace();
+        }
+
+        // if the registration failed
+        if(registerSuccess == 0){
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
+            request.setAttribute("register_error", "Registration Success!");
+            requestDispatcher.forward(request, response);
+        }
+        else if (registerSuccess == 1) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
+            request.setAttribute("register_error", "That username already exists.");
+            requestDispatcher.forward(request, response);
+        }
+        else{
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
+            request.setAttribute("register_error", "Database failed to connect.");
+            requestDispatcher.forward(request, response);
+        }
+
     }
 }

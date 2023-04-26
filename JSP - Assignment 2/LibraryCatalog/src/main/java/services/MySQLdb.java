@@ -36,6 +36,8 @@ public class MySQLdb {
 
         // Statement
         String qLogin = "SELECT fname FROM users WHERE username = '"+ username +"' AND password = '"+ password +"'";
+
+        // query statement
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(qLogin);
 
@@ -48,6 +50,35 @@ public class MySQLdb {
         resultSet.close();
         statement.close();
         return userModel;
+    }
+
+    public int doRegister(int user_id, String first_name, String last_name, String username, String password) throws SQLException{
+
+        // check if the user exists first
+        String qCheck = "SELECT COUNT(*) AS count FROM users WHERE username = '"+ username +"'";
+        Statement checkStatement = connection.createStatement();
+        ResultSet checkResult = checkStatement.executeQuery(qCheck);
+        checkResult.next();
+        int count = checkResult.getInt("count");
+        if (count > 0) {
+            System.err.println("Username already exists");
+            return 1;
+        }
+
+        // Statement
+        String qRegister = "INSERT INTO users (user_id, fname, lname, username, password) VALUES ("+user_id+", '"+ first_name +"', '"+ last_name +"', '"+ username +"', '"+ password +"')";
+        Statement statement = connection.createStatement();
+
+        // execute statement
+        try {
+            statement.executeUpdate(qRegister);
+            return 0;
+        } catch (SQLException e) {
+            System.err.println("Error executing SQL statement: " + e.getMessage());
+            System.err.println("SQL Statement: " + qRegister);
+            return -1;
+        }
+
     }
 
     public List<MusicModel> fetchMusic(int albumid) throws SQLException {
@@ -125,4 +156,5 @@ public class MySQLdb {
         preparedStatement.close();
         return list;
     }
+
 }
