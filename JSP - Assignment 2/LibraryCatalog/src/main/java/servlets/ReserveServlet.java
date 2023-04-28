@@ -49,34 +49,5 @@ public class ReserveServlet extends HttpServlet {
             request.setAttribute("error", "You must be logged in to reserve a book.");
             requestDispatcher.forward(request, response);
         }
-
-        /*
-        int album_id = 999;
-        HttpSession session = request.getSession();
-        MySQLdb db = MySQLdb.getInstance();
-        if (session != null) {
-            if (session.getAttribute("user") != null) {
-                try {
-                    UserModel user = (UserModel) session.getAttribute("user");
-                    List<MusicModel> list = db.getReservedMusic(user.getUsername());
-
-                    RequestDispatcher requestDispatcher = request.getRequestDispatcher("cart.jsp");
-                    request.setAttribute("list_of_reserve", list);
-                    requestDispatcher.forward(request, response);
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-                request.setAttribute("error", "Please login to continue..!!!");
-                requestDispatcher.forward(request, response);
-            }
-        } else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("error", "Please login to continue..!!!");
-            requestDispatcher.forward(request, response);
-        }
-        */
     }
 }

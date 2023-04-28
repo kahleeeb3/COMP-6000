@@ -128,7 +128,6 @@ public class MySQLdb {
         // define topic list
         List<TopicModel> list = new ArrayList<>();
         // SQL Statement to get topic table
-        //String qGetTopics = "SELECT * FROM topics";
         String qGetTopics = "SELECT T.* " +
                 "FROM topics as T, books as B "+
                 "WHERE T.topic_id = B.topic_id AND B.is_available != 0";
