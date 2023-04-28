@@ -32,29 +32,65 @@ public class CartServlet extends HttpServlet {
             try {
                 MySQLdb db = MySQLdb.getInstance(); // define database
                 UserModel user = (UserModel) session.getAttribute("user"); // define user
-                int book_id = Integer.parseInt(request.getParameter("id")); // get book id
-                boolean result = db.doReserve(user.getUserid(), book_id); // perform reservation
+                boolean result = false;
 
-                // update available book list
-                List<BookModel> bookModelList = db.fetchBook(-1);
-                request.setAttribute("list_of_books", bookModelList);
+                // check if user is reserving a book
+                String addId = request.getParameter("id");
+                if(addId != null){
+                    int book_id = Integer.parseInt(addId);
+                    result = db.doReserve(user.getUserid(), book_id); // perform reservation
 
-                // update available of topics
-                List<TopicModel> topicModelList = db.fetchTopics();
-                request.setAttribute("list_of_topics", topicModelList);
+                    // update available book list
+                    List<BookModel> bookModelList = db.fetchBook(-1);
+                    request.setAttribute("list_of_books", bookModelList);
 
-                // if reserve success
-                if(result) {
-                    RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
-                    request.setAttribute("message", "Successfully reserved book.");
-                    requestDispatcher.forward(request, response);
+                    // update available of topics
+                    List<TopicModel> topicModelList = db.fetchTopics();
+                    request.setAttribute("list_of_topics", topicModelList);
+
+                    // if reserve success
+                    if(result) {
+                        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+                        request.setAttribute("message", "Successfully reserved book.");
+                        requestDispatcher.forward(request, response);
+                    }
+                    // if reserve failure
+                    else {
+                        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+                        request.setAttribute("message", "You have already reserved this book.");
+                        requestDispatcher.forward(request, response);
+                    }
                 }
-                // if reserve failure
-                else {
-                    RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
-                    request.setAttribute("message", "You have already reserved this book.");
-                    requestDispatcher.forward(request, response);
+
+                // check if user is removing book
+                String removeId = request.getParameter("remove_id");
+                if (removeId != null) {
+                    int remove_book_id = Integer.parseInt(removeId); // get book id
+                    result = db.doRemoveReserve(user.getUserid(), remove_book_id); // perform reservation
+
+                    // update available book list
+                    List<BookModel> bookModelList = db.fetchBook(-1);
+                    request.setAttribute("list_of_books", bookModelList);
+
+                    // update available of topics
+                    List<TopicModel> topicModelList = db.fetchTopics();
+                    request.setAttribute("list_of_topics", topicModelList);
+
+                    // if reserve success
+                    if(result) {
+                        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+                        request.setAttribute("message", "Successfully removed reserved book.");
+                        requestDispatcher.forward(request, response);
+                    }
+                    // if reserve failure
+                    else {
+                        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+                        request.setAttribute("message", "Couldn't remove reserved this book.");
+                        requestDispatcher.forward(request, response);
+                    }
                 }
+
+
 
             }
             catch(SQLException e){
@@ -68,54 +104,7 @@ public class CartServlet extends HttpServlet {
             request.setAttribute("error", "You must be logged in to reserve a book.");
             requestDispatcher.forward(request, response);
         }
-
-
-        /*
-        int song_id = Integer.parseInt(request.getParameter("id"));
-
-        HttpSession session = request.getSession();
-        MySQLdb db = MySQLdb.getInstance();
-        if(session != null) {
-            if(session.getAttribute("user") != null) {
-                try {
-                    UserModel user = (UserModel) session.getAttribute("user");
-                    boolean result = db.doReserve(user.getUsername(), song_id);
-
-
-
-                    List<MusicModel> musicModelList = db.fetchMusic(999);
-                    request.setAttribute("list_of_music", musicModelList);
-
-                    List<AlbumModel> albumModelList = db.fetchAlbums();
-                    request.setAttribute("list_of_album", albumModelList);
-
-
-
-
-
-
-                    if(result) {
-                        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
-                        request.setAttribute("message", "Success.!");
-                        requestDispatcher.forward(request, response);
-                    } else {
-                        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
-                        request.setAttribute("message", "Something went wrong! Server error.!");
-                        requestDispatcher.forward(request, response);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-                request.setAttribute("error", "Please login to continue..!!!");
-                requestDispatcher.forward(request, response);
-            }
-        } else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("error", "Please login to continue..!!!");
-            requestDispatcher.forward(request, response);
-        }
-        */
     }
+
+
 }

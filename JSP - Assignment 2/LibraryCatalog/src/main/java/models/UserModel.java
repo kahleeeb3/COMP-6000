@@ -19,8 +19,4 @@ public class UserModel {
         return user_id;
     }
 
-    public void setUserid(int user_id) {this.user_id = user_id;}
-
-    //public String getEmail() {return email;} // not storing email
-    //public void setEmail(String email) {this.email = email;} // not storing email
 }

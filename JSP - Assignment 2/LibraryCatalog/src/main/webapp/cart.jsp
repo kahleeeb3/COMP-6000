@@ -23,18 +23,22 @@
 <br/>
 <br/>
 
-
+<p>Your Reservations</p>
 <table>
     <tr>
-        <th>Index</th>
-        <th>Song name</th>
-        <th>Album name</th>
+        <td><b>Index</b></td>
+        <td><b>Book Name</b></td>
+        <td><b>Topic</b></td>
+        <td><b>Author</b></td>
+        <td><b>Action</b></td>
     </tr>
-    <c:forEach var="each_reserve" items="${list_of_reserve}" varStatus="i">
+    <c:forEach var="book" items="${list_of_reserve}" varStatus="i">
         <tr>
             <td>${i.index + 1}</td>
-            <td>${each_reserve.getSong_name()}</td>
-            <td>${each_reserve.getAlbum_name()}</td>
+            <td>${book.getBook_name()}</td>
+            <td>${book.getTopic_name()}</td>
+            <td>${book.getAuthor_name()}</td>
+            <td><a href="CartServlet?remove_id=${book.getBook_id()}">Remove Reserve</a></td>
         </tr>
     </c:forEach>
 </table>

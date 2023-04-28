@@ -98,8 +98,6 @@ public class MySQLdb {
             qGetBook += " AND T.topic_id = " + book_id;
         }
 
-
-
         // create prepared statement
         PreparedStatement preparedStatement = connection.prepareStatement(qGetBook);
         // get results from query
@@ -171,11 +169,6 @@ public class MySQLdb {
         return list;
     }
 
-    public List<BookModel> getReservedBooks(int user_id) throws SQLException {
-        List<BookModel> list = new ArrayList<>();
-        return list;
-    }
-
     public boolean doReserve(int user_id, int book_id) throws SQLException {
         boolean result = false; // default return
 
@@ -191,7 +184,8 @@ public class MySQLdb {
             return false;
         }
 
-        String qDoReserve = "INSERT INTO reservations VALUES("+user_id+","+book_id+");"; // query string
+        // make reservation
+        String qDoReserve = "INSERT INTO reservations VALUES("+user_id+","+book_id+");"; // create new reservation
         PreparedStatement preparedStatement = connection.prepareStatement(qDoReserve); // prepare query
         int rows_update = preparedStatement.executeUpdate(); // execute query
         if(rows_update > 0) {
@@ -201,39 +195,41 @@ public class MySQLdb {
         return result;
     }
 
-    /*
-    // WHEN USING INSERT/UPDATE/DELETE --> executeUpdate()
-    // SELECT --> executeQuery()
-    public boolean doReserve(String email, int song_id) throws SQLException {
-        boolean result = false;
-        String qDoReserve = "INSERT INTO reserve VALUES(?, ?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(qDoReserve);
-        preparedStatement.setString(1, email);
-        preparedStatement.setInt(2, song_id);
-        int rows_update = preparedStatement.executeUpdate();
+    public boolean doRemoveReserve(int user_id, int book_id) throws SQLException {
+        boolean result = false; // default return
+
+        // Remove reservation
+        String qDoRemoveReserve = "DELETE FROM reservations WHERE user_id = "+user_id+" AND book_id = "+book_id+";"; // create new reservation
+        PreparedStatement preparedStatement = connection.prepareStatement(qDoRemoveReserve); // prepare query
+        int rows_update = preparedStatement.executeUpdate(); // execute query
         if(rows_update > 0) {
             result = true;
         }
         preparedStatement.close();
         return result;
     }
-    public List<MusicModel> getReservedMusic(String email) throws SQLException {
-        List<MusicModel> list = new ArrayList<>();
-        String qGetReserved = "SELECT S.song_id, A.album_id, S.song_name, A.album_name FROM songs as S, albums as A, reserve as R WHERE R.song_id = S.song_id AND S.album_id = A.album_id AND R.email = '"+email+"'";
-        PreparedStatement preparedStatement = connection.prepareStatement(qGetReserved);
-        ResultSet resultSet = preparedStatement.executeQuery();
+
+    public List<BookModel> getReservedBooks(int user_id) throws SQLException {
+        // query the db
+        List<BookModel> list = new ArrayList<>(); // define return list
+        String qGetReserved = "SELECT B.book_name, T.topic_name, A.author_name, B.book_id, B.is_available " +
+                "FROM books as B, authors as A, topics as T, reservations as R "+
+                "WHERE B.author_id = A.author_id AND B.topic_id = T.topic_id AND B.book_id = R.book_id";
+        PreparedStatement preparedStatement = connection.prepareStatement(qGetReserved); // query db
+        ResultSet resultSet = preparedStatement.executeQuery(); // get results
+
+        // iterate results
         while(resultSet.next()) {
-            int album_id = resultSet.getInt("album_id");
-            String album_name = resultSet.getString("album_name");
-            int song_id = resultSet.getInt("song_id");
-            String song_name = resultSet.getString("song_name");
-            MusicModel musicModel = new MusicModel(song_id, album_id, song_name, album_name);
-            list.add(musicModel);
+            String book_name = resultSet.getString("book_name");
+            String topic_name = resultSet.getString("topic_name");
+            String author_name = resultSet.getString("author_name");
+            boolean is_available = resultSet.getBoolean("is_available");
+            int book_id = resultSet.getInt("book_id");
+
+            BookModel bookModel = new BookModel(book_name,topic_name,author_name,is_available,book_id); // create book object
+            list.add(bookModel);
         }
-        resultSet.close();
-        preparedStatement.close();
-        return list;
+        return list; // return list of books
     }
-     */
 
 }

@@ -59,8 +59,12 @@
                     <td>${book.getBook_name()}</td>
                     <td>${book.getTopic_name()}</td>
                     <td>${book.getAuthor_name()}</td>
+                    <%-- If not logged in, the user should still see the button to reserve
+                        the copy which will take them to the log in page upon click.--%>
                     <% if (sessionExists && userSignedIn) { %>
                     <td><a href="CartServlet?id=${book.getBook_id()}">Reserve</a></td>
+                    <%} else{%>
+                    <td><a href="LogoutServlet">Reserve</a></td>
                     <%}%>
             </tr>
         </c:forEach>
