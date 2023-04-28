@@ -35,7 +35,7 @@ public class MySQLdb {
     public UserModel doLogin(String username, String password) throws SQLException {
 
         // Statement
-        String qLogin = "SELECT fname FROM users WHERE username = '"+ username +"' AND password = '"+ password +"'";
+        String qLogin = "SELECT fname, user_id FROM users WHERE username = '"+ username +"' AND password = '"+ password +"'";
 
         // query statement
         Statement statement = connection.createStatement();
@@ -44,8 +44,9 @@ public class MySQLdb {
         // get the user model
         UserModel userModel = null;
         if(resultSet.next()) {
+            int user_id = resultSet.getInt("user_id");
             String name = resultSet.getString("fname");
-            userModel = new UserModel(username, name);
+            userModel = new UserModel(user_id, name);
         }
         resultSet.close();
         statement.close();
@@ -62,6 +63,7 @@ public class MySQLdb {
         int count = checkResult.getInt("count");
         if (count > 0) {
             System.err.println("Username already exists");
+            checkStatement.close();
             return 1;
         }
 
@@ -113,9 +115,10 @@ public class MySQLdb {
             String topic_name = resultSet.getString("topic_name");
             String author_name = resultSet.getString("author_name");
             boolean is_available = resultSet.getBoolean("is_available");
+            int book_id_2 = resultSet.getInt("book_id");
 
             // create book object
-            BookModel bookModel = new BookModel(book_name, topic_name, author_name, is_available);
+            BookModel bookModel = new BookModel(book_name, topic_name, author_name, is_available,book_id_2);
 
             // add object to list
             list.add(bookModel);
@@ -166,6 +169,36 @@ public class MySQLdb {
         resultSet.close();
         preparedStatement.close();
         return list;
+    }
+
+    public List<BookModel> getReservedBooks(int user_id) throws SQLException {
+        List<BookModel> list = new ArrayList<>();
+        return list;
+    }
+
+    public boolean doReserve(int user_id, int book_id) throws SQLException {
+        boolean result = false; // default return
+
+        // check if the reservation already exists
+        String qCheck = "SELECT COUNT(*) AS count FROM reservations WHERE user_id = " +user_id+ " AND book_id = " + book_id;
+        Statement checkStatement = connection.createStatement();
+        ResultSet checkResult = checkStatement.executeQuery(qCheck);
+        checkResult.next();
+        int count = checkResult.getInt("count");
+        if (count > 0) {
+            checkStatement.close();
+            System.err.println("Username already exists");
+            return false;
+        }
+
+        String qDoReserve = "INSERT INTO reservations VALUES("+user_id+","+book_id+");"; // query string
+        PreparedStatement preparedStatement = connection.prepareStatement(qDoReserve); // prepare query
+        int rows_update = preparedStatement.executeUpdate(); // execute query
+        if(rows_update > 0) {
+            result = true;
+        }
+        preparedStatement.close();
+        return result;
     }
 
     /*

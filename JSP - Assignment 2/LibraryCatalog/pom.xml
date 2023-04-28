@@ -7,7 +7,7 @@
     <groupId>com.example</groupId>
     <artifactId>LibraryCatalog</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>MusicStore</name>
+    <name>LibraryCatalog</name>
     <packaging>war</packaging>
 
     <properties>

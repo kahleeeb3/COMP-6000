@@ -2,10 +2,11 @@ package models;
 
 public class UserModel {
 
-    String username, fname;
+    int user_id;
+    String fname;
 
-    public UserModel(String username, String fname) {
-        this.username = username;
+    public UserModel(int user_id, String fname) {
+        this.user_id = user_id;
         this.fname = fname;
     }
 
@@ -14,11 +15,11 @@ public class UserModel {
     }
 
     public void setName(String Newfname) {this.fname = Newfname;}
-    public String getUsername() {
-        return username;
+    public int getUserid() {
+        return user_id;
     }
 
-    public void setUsername(String NewUsername) {this.username = NewUsername;}
+    public void setUserid(int user_id) {this.user_id = user_id;}
 
     //public String getEmail() {return email;} // not storing email
     //public void setEmail(String email) {this.email = email;} // not storing email

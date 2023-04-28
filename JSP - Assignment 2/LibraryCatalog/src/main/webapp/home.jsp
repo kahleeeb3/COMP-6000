@@ -10,9 +10,9 @@
 
 
 <%
-    boolean sessionExits = (request.getSession() != null);
+    boolean sessionExists = (request.getSession() != null);
     boolean userSignedIn = (session.getAttribute("user") != null);
-    if (sessionExits && userSignedIn) {
+    if (sessionExists && userSignedIn) {
         UserModel user = (UserModel) session.getAttribute("user");
 %>
         <p>Hello, <%= user.getName() %>
@@ -50,7 +50,7 @@
                 <td><b>Book Name</b></td>
                 <td><b>Topic</b></td>
                 <td><b>Author</b></td>
-                <% if (sessionExits && userSignedIn) { %>
+                <% if (sessionExists && userSignedIn) { %>
                 <td><b>Action</b></td>
                 <%}%>
             </tr>
@@ -59,10 +59,9 @@
                     <td>${book.getBook_name()}</td>
                     <td>${book.getTopic_name()}</td>
                     <td>${book.getAuthor_name()}</td>
-                    <% if (sessionExits && userSignedIn) { %>
-                    <td>Temp</td>
+                    <% if (sessionExists && userSignedIn) { %>
+                    <td><a href="CartServlet?id=${book.getBook_id()}">Reserve</a></td>
                     <%}%>
-                <%--<td><a href="CartServlet?id=${each_music.getSong_id()}">Reserve</a></td>--%>
             </tr>
         </c:forEach>
     </table>
