@@ -24,12 +24,8 @@ public class FetchBookServlet extends HttpServlet {
         HttpSession session = request.getSession(); // get session instance
         MySQLdb db = MySQLdb.getInstance(); // get database instance
 
-        // if a session exits
-        if(session != null) {
-            // if the user is defined
-            if(session.getAttribute("user") != null) {
 
-                // if the album is defined
+        // if the album is defined
                 /*
                 if(request.getParameter("album") != null) {
                     album_id = Integer.parseInt(request.getParameter("album"));
@@ -37,41 +33,20 @@ public class FetchBookServlet extends HttpServlet {
                 */
 
 
-                try {
-                    // Get List of Books
-                    List<BookModel> bookModelList = db.fetchBook(100);
-                    request.setAttribute("list_of_books", bookModelList);
+        try {
+            // Get List of Books
+            List<BookModel> bookModelList = db.fetchBook(100);
+            request.setAttribute("list_of_books", bookModelList);
 
-                    // Get List of topics
-                    List<TopicModel> topicModelList = db.fetchTopics();
-                    request.setAttribute("list_of_topics", topicModelList);
+            // Get List of topics
+            List<TopicModel> topicModelList = db.fetchTopics();
+            request.setAttribute("list_of_topics", topicModelList);
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
-                requestDispatcher.forward(request, response);
-
-
-
-            }
-
-            // if the user is not defined
-            else {
-                // tell user to login
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-                request.setAttribute("error", "Please login to continue..!!!");
-                requestDispatcher.forward(request, response);
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        // if no session exits
-        else {
-            // inform user they must login first
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("error", "Please login to continue..!!!");
-            requestDispatcher.forward(request, response);
-        }
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+        requestDispatcher.forward(request, response);
     }
 }

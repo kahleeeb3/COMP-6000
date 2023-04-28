@@ -9,14 +9,20 @@
 <body>
 
 
-    <%
-    if (request.getSession() != null) {
-        if(session.getAttribute("user") != null) {
-            UserModel user = (UserModel) session.getAttribute("user");
-            %>
-            <p>Hello, <%= user.getName() %></p>
-            <p> <a href="LogoutServlet">Logout</a> </p>
-            <p> <a href="ReserveServlet">Cart</a> </p>
+<%
+    boolean sessionExits = (request.getSession() != null);
+    boolean userSignedIn = (session.getAttribute("user") != null);
+    if (sessionExits && userSignedIn) {
+        UserModel user = (UserModel) session.getAttribute("user");
+%>
+        <p>Hello, <%= user.getName() %>
+        </p>
+        <p><a href="LogoutServlet">Logout</a></p>
+        <p><a href="ReserveServlet">Cart</a></p>
+<%} else {%>
+        <p>Please <a href="LogoutServlet">Login/Register</a> to reserve a book</p>
+<% }
+%>
 <br/>
 
 
@@ -44,14 +50,18 @@
                 <th>Book Name</th>
                 <th>Topic</th>
                 <th>Author</th>
+                <% if (sessionExits && userSignedIn) { %>
                 <th>Action</th>
+                <%}%>
             </tr>
             <c:forEach var="book" items="${list_of_books}">
                 <tr>
                     <td>${book.getBook_name()}</td>
                     <td>${book.getTopic_name()}</td>
                     <td>${book.getAuthor_name()}</td>
+                    <% if (sessionExits && userSignedIn) { %>
                     <td>Temp</td>
+                    <%}%>
                 <%--<td><a href="CartServlet?id=${each_music.getSong_id()}">Reserve</a></td>--%>
             </tr>
         </c:forEach>
@@ -64,23 +74,6 @@
 <br/>
 <br/>
 <p>${message}</p>
-
-
-<%
-        }
-        else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("error", "Please login to continue..!!!");
-            requestDispatcher.forward(request, response);
-        }
-    }
-
-    else {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-        request.setAttribute("error", "Please login to continue..!!!");
-        requestDispatcher.forward(request, response);
-    }
-%>
 
 
 </body>
