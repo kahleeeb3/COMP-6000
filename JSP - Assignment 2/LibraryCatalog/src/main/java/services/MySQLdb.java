@@ -91,7 +91,7 @@ public class MySQLdb {
         // Define base SQL Query
         String qGetBook = "SELECT B.book_name, T.topic_name, A.author_name, B.is_available, B.book_id " +
                 "FROM library_catalog.books as B, library_catalog.authors as A, library_catalog.topics as T "+
-                "WHERE A.author_id = B.author_id AND T.topic_id = B.topic_id";
+                "WHERE A.author_id = B.author_id AND T.topic_id = B.topic_id AND B.is_available != 0";
 
         if(!select_all_books){
             // SQL Statement to data for all books
@@ -122,36 +122,16 @@ public class MySQLdb {
             list.add(bookModel);
         }
         return list;
-
-        /*
-        String qGetMusic = null;
-        List<MusicModel> list = new ArrayList<>();
-        if(albumid == 999) {
-            qGetMusic = "SELECT A.album_name, S.song_name, S.song_id, S.album_id FROM albums as A, songs as S WHERE A.album_id = S.album_id";
-        } else {
-            qGetMusic = "SELECT A.album_name, S.song_name, S.song_id, S.album_id FROM albums as A, songs as S WHERE A.album_id = S.album_id AND S.album_id = '"+albumid+"'";
-        }
-        PreparedStatement preparedStatement = connection.prepareStatement(qGetMusic);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while(resultSet.next()) {
-            int song_id = resultSet.getInt("song_id");
-            int album_id = resultSet.getInt("album_id");
-            String song_name = resultSet.getString("song_name");
-            String album_name = resultSet.getString("album_name");
-            MusicModel musicModel = new MusicModel(song_id, album_id, song_name, album_name);
-
-            list.add(musicModel);
-        }
-        resultSet.close();
-        preparedStatement.close();
-        */
     }
 
     public List<TopicModel> fetchTopics() throws SQLException {
         // define topic list
         List<TopicModel> list = new ArrayList<>();
         // SQL Statement to get topic table
-        String qGetTopics = "SELECT * FROM topics";
+        //String qGetTopics = "SELECT * FROM topics";
+        String qGetTopics = "SELECT T.* " +
+                "FROM topics as T, books as B "+
+                "WHERE T.topic_id = B.topic_id AND B.is_available != 0";
         // get prepared statement
         PreparedStatement preparedStatement = connection.prepareStatement(qGetTopics);
         // get results from query
@@ -192,6 +172,16 @@ public class MySQLdb {
             result = true;
         }
         preparedStatement.close();
+
+        // change is_available value to 0
+        String qChangeIsAvailable = "UPDATE books SET is_available = 0 WHERE book_id ="+book_id+ ";";
+        PreparedStatement updateStatement = connection.prepareStatement(qChangeIsAvailable); // prepare query
+        int isAvailableUpdate = updateStatement.executeUpdate();
+        if(isAvailableUpdate > 0){
+            result = true;
+        }
+        updateStatement.close();
+
         return result;
     }
 
@@ -206,6 +196,16 @@ public class MySQLdb {
             result = true;
         }
         preparedStatement.close();
+
+        // change is_available value to 1
+        String qChangeIsAvailable = "UPDATE books SET is_available = 1 WHERE book_id ="+book_id+ ";";
+        PreparedStatement updateStatement = connection.prepareStatement(qChangeIsAvailable); // prepare query
+        int isAvailableUpdate = updateStatement.executeUpdate();
+        if(isAvailableUpdate > 0){
+            result = true;
+        }
+        updateStatement.close();
+
         return result;
     }
 
