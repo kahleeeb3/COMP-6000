@@ -28,6 +28,8 @@
 </form>
 <p>${register_error}</p>
 
+<p><a href="FetchBookServlet">Browse Catalog Without Sign In</a></p>
+
 </body>
 <script>
     function validate_login() {
