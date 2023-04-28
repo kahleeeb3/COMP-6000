@@ -1,6 +1,6 @@
 package servlets;
 
-import models.MusicModel;
+import models.BookModel;
 import models.UserModel;
 import services.MySQLdb;
 
@@ -61,7 +61,7 @@ public class LoginServlet extends HttpServlet {
             //RequestDispatcher indexPageDispatcher = request.getRequestDispatcher("index.jsp");
             //request.setAttribute("error", "Login Successful.");
             //indexPageDispatcher.forward(request,response);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/FetchMusicServlet");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/FetchBookServlet");
             requestDispatcher.forward(request, response);
         }
         // if log in failed

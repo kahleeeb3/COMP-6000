@@ -1,6 +1,6 @@
 package servlets;
 
-import models.MusicModel;
+import models.BookModel;
 import models.UserModel;
 import services.MySQLdb;
 
@@ -20,6 +20,7 @@ public class ReserveServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /*
         int album_id = 999;
         HttpSession session = request.getSession();
         MySQLdb db = MySQLdb.getInstance();
@@ -46,5 +47,6 @@ public class ReserveServlet extends HttpServlet {
             request.setAttribute("error", "Please login to continue..!!!");
             requestDispatcher.forward(request, response);
         }
+        */
     }
 }

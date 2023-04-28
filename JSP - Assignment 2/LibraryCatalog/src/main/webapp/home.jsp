@@ -9,33 +9,27 @@
 <body>
 
 
-<%
+    <%
     if (request.getSession() != null) {
         if(session.getAttribute("user") != null) {
             UserModel user = (UserModel) session.getAttribute("user");
             %>
             <p>Hello, <%= user.getName() %></p>
             <p> <a href="LogoutServlet">Logout</a> </p>
-
-
-<br/>
-<br/>
-<p> <a href="ReserveServlet">Cart</a> </p>
-<br/>
+            <p> <a href="ReserveServlet">Cart</a> </p>
 <br/>
 
 
 <form action="FetchMusicServlet">
-    Filter Songs:
-    <select name="album">
+    Filter Book Topic:
+    <select name="topic">
         <option value="999">All</option>
-        <c:forEach var="each_album" items="${list_of_album}">
-            <option value="${each_album.getAlbum_id()}">${each_album.getAlbum_name()}</option>
+        <c:forEach var="topic" items="${list_of_topics}">
+            <option value="${topic.getTopic_id()}">${topic.getTopic_name()}</option>
         </c:forEach>
     </select>
     <input type="submit" value="Filter" />
 </form>
-
 
 
 
@@ -47,20 +41,21 @@
 
         <table>
             <tr>
-                <th>Song id</th>
-                <th>Song name</th>
-                <th>Album name</th>
+                <th>Book Name</th>
+                <th>Topic</th>
+                <th>Author</th>
                 <th>Action</th>
             </tr>
-            <c:forEach var="each_music" items="${list_of_music}">
+            <c:forEach var="book" items="${list_of_books}">
                 <tr>
-                    <td>${each_music.getSong_id()}</td>
-                    <td>${each_music.getSong_name()}</td>
-                    <td>${each_music.getAlbum_name()}</td>
-                    <td><a href="CartServlet?id=${each_music.getSong_id()}">Reserve</a></td>
-                </tr>
-            </c:forEach>
-        </table>
+                    <td>${book.getBook_name()}</td>
+                    <td>${book.getTopic_name()}</td>
+                    <td>${book.getAuthor_name()}</td>
+                    <td>Temp</td>
+                <%--<td><a href="CartServlet?id=${each_music.getSong_id()}">Reserve</a></td>--%>
+            </tr>
+        </c:forEach>
+    </table>
 
 
 
@@ -71,13 +66,16 @@
 <p>${message}</p>
 
 
-        <%
-        } else {
+<%
+        }
+        else {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
             request.setAttribute("error", "Please login to continue..!!!");
             requestDispatcher.forward(request, response);
         }
-    } else {
+    }
+
+    else {
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
         request.setAttribute("error", "Please login to continue..!!!");
         requestDispatcher.forward(request, response);
