@@ -8,12 +8,11 @@ public class BookModel {
     boolean is_available;
     int book_id;
 
-    public BookModel(String book_name,String topic_name,String author_name, boolean is_available, int book_id) {
+    public BookModel(String book_name,String topic_name,String author_name, boolean is_available) {
         this.book_name = book_name;
         this.topic_name = topic_name;
         this.author_name = author_name;
         this.is_available = is_available;
-        this.book_id = book_id;
     }
 
     public String getBook_name(){

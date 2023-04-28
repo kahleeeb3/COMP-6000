@@ -26,10 +26,10 @@
 <br/>
 
 
-<form action="FetchMusicServlet">
+<form action="FetchBookServlet">
     Filter Book Topic:
     <select name="topic">
-        <option value="999">All</option>
+        <option value="-1">All</option>
         <c:forEach var="topic" items="${list_of_topics}">
             <option value="${topic.getTopic_id()}">${topic.getTopic_name()}</option>
         </c:forEach>
@@ -47,11 +47,11 @@
 
         <table>
             <tr>
-                <th>Book Name</th>
-                <th>Topic</th>
-                <th>Author</th>
+                <td><b>Book Name</b></td>
+                <td><b>Topic</b></td>
+                <td><b>Author</b></td>
                 <% if (sessionExits && userSignedIn) { %>
-                <th>Action</th>
+                <td><b>Action</b></td>
                 <%}%>
             </tr>
             <c:forEach var="book" items="${list_of_books}">

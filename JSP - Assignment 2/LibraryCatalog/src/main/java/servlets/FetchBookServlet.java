@@ -20,22 +20,21 @@ public class FetchBookServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //int album_id = 999;
+
+        boolean topic_defined = (request.getParameter("topic") != null);
+        int topic_id = -1; // default to all topics (default for first page load)
+
+        // if the topic is defined (page is already loaded)
+        if (topic_defined) {
+            topic_id = Integer.parseInt(request.getParameter("topic"));
+        }
+
         HttpSession session = request.getSession(); // get session instance
         MySQLdb db = MySQLdb.getInstance(); // get database instance
 
-
-        // if the album is defined
-                /*
-                if(request.getParameter("album") != null) {
-                    album_id = Integer.parseInt(request.getParameter("album"));
-                }
-                */
-
-
         try {
             // Get List of Books
-            List<BookModel> bookModelList = db.fetchBook(100);
+            List<BookModel> bookModelList = db.fetchBook(topic_id);
             request.setAttribute("list_of_books", bookModelList);
 
             // Get List of topics

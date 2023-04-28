@@ -81,31 +81,41 @@ public class MySQLdb {
 
     }
 
-    public List<BookModel> fetchBook(int bookid) throws SQLException {
-        // define book lists
-        List<BookModel> list = new ArrayList<>();
-        // SQL Statement to get book_name, topic_name, author_name, and is_available for all books
-        String qGetBook =
-                "SELECT B.book_name, T.topic_name, A.author_name, B.is_available, B.book_id " +
-                "FROM library_catalog.books as B, library_catalog.authors as A, library_catalog.topics as T " +
-                "WHERE A.author_id = B.author_id AND T.topic_id = B.topic_id;";
+    public List<BookModel> fetchBook(int book_id) throws SQLException {
+
+        // if the id is -1, select all books
+        boolean select_all_books = (book_id == -1);
+
+        // Define base SQL Query
+        String qGetBook = "SELECT B.book_name, T.topic_name, A.author_name, B.is_available, B.book_id " +
+                "FROM library_catalog.books as B, library_catalog.authors as A, library_catalog.topics as T "+
+                "WHERE A.author_id = B.author_id AND T.topic_id = B.topic_id";
+
+        if(!select_all_books){
+            // SQL Statement to data for all books
+            qGetBook += " AND T.topic_id = " + book_id;
+        }
+
+
 
         // create prepared statement
         PreparedStatement preparedStatement = connection.prepareStatement(qGetBook);
         // get results from query
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        // iterate over results
+        // define book lists
+        List<BookModel> list = new ArrayList<>();
+
+        // iterate over SQL results
         while(resultSet.next()) {
             // get values
             String book_name = resultSet.getString("book_name");
             String topic_name = resultSet.getString("topic_name");
             String author_name = resultSet.getString("author_name");
             boolean is_available = resultSet.getBoolean("is_available");
-            int book_id = resultSet.getInt("book_id");
 
             // create book object
-            BookModel bookModel = new BookModel(book_name, topic_name, author_name, is_available, book_id);
+            BookModel bookModel = new BookModel(book_name, topic_name, author_name, is_available);
 
             // add object to list
             list.add(bookModel);
